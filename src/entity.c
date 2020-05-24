@@ -12,7 +12,13 @@ int entity_physics(const level *lvl, entity *ent){
     int tile_y = (int) floor(ent->y/TILE_SIZE);
     char cell = level_get(lvl,tile_x,tile_y);
 
-    if(cell=='#') return 1;
+
+    // Simple collision with walls
+    if(cell=='#'){
+        ent->x += -ent->vx;
+        ent->y += -ent->vy;
+        return 1;
+    } 
     return 0;
 }
 

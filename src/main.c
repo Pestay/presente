@@ -15,13 +15,17 @@ int main(int argc, char const *argv[]){
     InitWindow(screen_width,screen_height,"Presente - the game");
     SetTargetFPS(60);
 
-    // Initialize level and fill randomly
-    level *lvl = level_new(50,40);
-    level_fill_random(lvl,6);
+    // Initialize level and fill with algorithm
+    // We can play around with this variables to get varied results!
+    level *lvl = level_proc_gen(75,75,6,4.8,3,4);
 
     // Initialize state (and add enemies)
-    state *sta = state_new();
+    state *sta = state_new(lvl);
     state_populate_random(lvl,sta,40);
+
+    // Load Textures
+    texture *wall = draw_texture_new("resources/rock_Texture.png"); 
+    texture *floor = draw_texture_new("resources/rock_Floor.png");
 
     // Main loop
     while(!WindowShouldClose()){
@@ -43,11 +47,9 @@ int main(int argc, char const *argv[]){
         // Drawing
         BeginDrawing();
 
-            ClearBackground(RAYWHITE);
+            ClearBackground(BLACK);
 
-            draw_state(lvl, sta);
-
-            DrawText("Presente profe!",190,200,20,LIGHTGRAY);
+            draw_state(lvl, sta,floor,wall);
 
         EndDrawing();
 
@@ -57,6 +59,8 @@ int main(int argc, char const *argv[]){
     CloseWindow();
 
     // Free memory
+    draw_free(wall);
+    draw_free(floor);
     state_free(sta);
     level_free(lvl);
 

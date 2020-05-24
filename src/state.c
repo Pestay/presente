@@ -6,7 +6,7 @@
 #include <assert.h>
 #include <math.h>
 
-state *state_new(){
+state *state_new(level *lvl){
     // Ask for memory for the state
     state *sta = malloc(sizeof(state));
 
@@ -14,9 +14,19 @@ state *state_new(){
     // (this is a trick from <string.h>)
     memset(sta,0,sizeof(state));
 
-    // We put the player in the center of the top-left cell.
-    sta->pla.ent.x = TILE_SIZE/2;
-    sta->pla.ent.y = TILE_SIZE/2;
+
+    // We set the starting position of the player to the middle
+    int plaInitialx = lvl->size_x/2;
+    int plaInitialy = lvl->size_y/2;
+
+    // If the player spawns at a wall, move until it is placed in a empty cell
+    while(lvl->cells[plaInitialx][plaInitialy] == '#')
+    {
+        plaInitialx += 1;
+        plaInitialy += 1;
+    }
+    sta->pla.ent.x = plaInitialx*TILE_SIZE;
+    sta->pla.ent.y = plaInitialy*TILE_SIZE;
     sta->pla.ent.rad = PLAYER_RAD;
     sta->pla.ent.hp  = PLAYER_HP;
 
